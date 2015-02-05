@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using Sevens.Interfaces;
+using Sevens.Core;
 
 namespace WpfSevens
 {
@@ -33,7 +34,7 @@ namespace WpfSevens
 
         private Image[,] _GameTable = new Image[13, 4];
         private Border[,] _GameBorderTable = new Border[13, 4];
-        private Table _Table = new Table();
+        private Sevens.Core.Table _Table = new Sevens.Core.Table();
         private List<IPlayer> _PlayerList = new List<IPlayer>();
         private Dictionary<IPlayer, BitmapImage> _PlayerBitmapImage = new Dictionary<IPlayer, BitmapImage>();
         private Dictionary<IPlayer, List<Image>> _PlayerPutImage = new Dictionary<IPlayer, List<Image>>();
@@ -183,7 +184,7 @@ namespace WpfSevens
         {
             var getPlayer = _Table.GetPlayer();
             var cards = _Table.GetPlayerCards(getPlayer);
-            var possibleCards = Table.GetPutPossibleCards(cards, _Table.GetPutCards());
+            var possibleCards = Sevens.Core.Table.GetPutPossibleCards(cards, _Table.GetPutCards());
             foreach (var player in _PlayerList)
             {
                 _PlayerImage[player].Visibility = getPlayer==player ? System.Windows.Visibility.Visible : System.Windows.Visibility.Hidden;

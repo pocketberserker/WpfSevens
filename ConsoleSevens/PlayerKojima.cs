@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Sevens.Interfaces;
+using Sevens.Core;
 
 #region 小島以外は見ないでね
 

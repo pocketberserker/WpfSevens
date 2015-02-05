@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Sevens.Interfaces;
 
-namespace WpfSevens
+namespace Sevens.Core
 {
     public class Card : ICard
     {
@@ -37,7 +37,7 @@ namespace WpfSevens
 
         }
 
-        override public string ToString()
+        public override string ToString()
         {
             return string.Format("{0}:{1}", this.CardType, this.CardNumber);
         }
@@ -49,7 +49,7 @@ namespace WpfSevens
         }
 
 
-        public static ICard[] GetCards()
+        public static Card[] GetCards()
         {
             var cardList = new List<Card>();
 

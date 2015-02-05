@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Sevens.Interfaces;
+using Sevens.Core;
 
 namespace WpfSevens
 {
