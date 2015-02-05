@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-
-
+using Sevens.Interfaces;
 
 namespace WpfSevens
 {
@@ -22,7 +21,7 @@ namespace WpfSevens
             /// <summary>
             /// カードを取得します。
             /// </summary>
-            public Card Card { get; private set; }
+            public ICard Card { get; private set; }
 
 
             /// <summary>
@@ -34,7 +33,7 @@ namespace WpfSevens
             /// <summary>
             /// カードの柄を取得します。
             /// </summary>
-            public Card.CardTypeEnum Mark { get { return this.Card.CardType; } }
+            public CardTypeEnum Mark { get { return this.Card.CardType; } }
 
 
             /// <summary>
@@ -70,7 +69,7 @@ namespace WpfSevens
             /// <param name="isHead">先頭のカード</param>
             /// <param name="isTail">末尾のカード</param>
             /// <param name="canPut">配置可能か</param>
-            public RestCard(Card card, bool isHead, bool isTail, bool canPut)
+            public RestCard(ICard card, bool isHead, bool isTail, bool canPut)
             {
                 this.Card = card;
                 this.IsHead = isHead;
@@ -112,7 +111,7 @@ namespace WpfSevens
             /// <summary>
             /// カードの柄を取得します。
             /// </summary>
-            public Card.CardTypeEnum Mark { get { return this.cards.First().Mark; } }
+            public CardTypeEnum Mark { get { return this.cards.First().Mark; } }
 
 
             /// <summary>
@@ -176,7 +175,7 @@ namespace WpfSevens
             /// <param name="playerCards">プレイヤーのカードのコレクション</param>
             /// <param name="putCards">カードテーブルに配置されているカードのコレクション</param>
             /// <returns>グループのコレクション</returns>
-            public static IReadOnlyCollection<RestCardGroup> From(IList<Card> playerCards, IList<Card> putCards)
+            public static IReadOnlyCollection<RestCardGroup> From(IList<ICard> playerCards, IList<ICard> putCards)
             {
                 const int centerNumber = 7;
                 var puttableCards   = Table.GetPutPossibleCards(playerCards, putCards)
@@ -290,7 +289,7 @@ namespace WpfSevens
         /// <param name="playerCards">プレイヤーのカードのコレクション</param>
         /// <param name="putCards">カードテーブルに配置されているカードのコレクション</param>
         /// <returns>配置するカード。nullの場合はパス。</returns>
-        public Card GetPutCard(IList<Card> playerCards, IList<Card> putCards)
+        public ICard GetPutCard(IList<ICard> playerCards, IList<ICard> putCards)
         {
             var result  = RestCardGroup.From(playerCards, putCards)     //--- カードの柄と大小で8グループに分割
                         .Where(x => x.HasPuttable)                      //--- 配置可能なもののみ

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Sevens.Interfaces;
 
 namespace WpfSevens
 {
@@ -10,12 +11,12 @@ namespace WpfSevens
     {
         private const int MAX_PASS = 3;
 
-        private List<Card> _CardList = new List<Card>();
-        private List<Card> _PutCardList = new List<Card>();
+        private List<ICard> _CardList = new List<ICard>();
+        private List<ICard> _PutCardList = new List<ICard>();
         private int _PlayerTurnIndex = 0;
         private bool _IsGameEnd = false;
 
-        private Dictionary<IPlayer, List<Card>> _PlayerCard = new Dictionary<IPlayer, List<Card>>();
+        private Dictionary<IPlayer, List<ICard>> _PlayerCard = new Dictionary<IPlayer, List<ICard>>();
         private Dictionary<IPlayer, int> _PlayerPassCount = new Dictionary<IPlayer, int>();
         private Dictionary<IPlayer, bool> _PlayerAlive = new Dictionary<IPlayer, bool>(); 
 
@@ -39,7 +40,7 @@ namespace WpfSevens
             _PlayerTurnIndex = 0;
             foreach (var player in playerList)
             {
-                _PlayerCard.Add(player, new List<Card>());
+                _PlayerCard.Add(player, new List<ICard>());
                 _PlayerPassCount.Add(player, 0);
                 _PlayerAlive.Add(player, true);
             }
@@ -70,7 +71,7 @@ namespace WpfSevens
                 var player = _PlayerCard.Keys.ToArray()[index];
                 var cardList = _PlayerCard[player].Where(row => row.CardNumber == 7);
 
-                if (cardList.Any(row => row.CardType == Card.CardTypeEnum.Diamonds))
+                if (cardList.Any(row => row.CardType == CardTypeEnum.Diamonds))
                 {
                     _PlayerTurnIndex = index;
                 }
@@ -83,7 +84,7 @@ namespace WpfSevens
             }
         }
 
-        public Card Trun(ref string message)
+        public ICard Trun(ref string message)
         {
             var player = GetPlayer();
             var card = player.GetPutCard(_PlayerCard[player], _PutCardList);
@@ -161,26 +162,26 @@ namespace WpfSevens
 
         }
 
-        public IList<Card> GetPlayerCards(IPlayer player)
+        public IList<ICard> GetPlayerCards(IPlayer player)
         {
             return _PlayerCard[player];
         }
 
-        public IList<Card> GetPutCards()
+        public IList<ICard> GetPutCards()
         {
             return _PutCardList;
         }
 
-        public IList<Card> GetAllCards()
+        public IList<ICard> GetAllCards()
         {
             return _CardList;
         }
 
-        public static IList<Card> GetPutPossibleCards(IList<Card> playerCards, IList<Card> putCards)
+        public static IList<ICard> GetPutPossibleCards(IList<ICard> playerCards, IList<ICard> putCards)
         {
-            var returnValue = new List<Card>();
+            var returnValue = new List<ICard>();
 
-            foreach (Card.CardTypeEnum cardType in Enum.GetValues(typeof(Card.CardTypeEnum)))
+            foreach (CardTypeEnum cardType in Enum.GetValues(typeof(CardTypeEnum)))
             {
                 for (var index = 7; index >= Card.START_CARD_NUMBER; index--)
                 {

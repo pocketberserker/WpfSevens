@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Sevens.Interfaces;
 
 namespace WpfSevens
 {
@@ -36,7 +37,7 @@ namespace WpfSevens
             return "ishino.png";
         }
 
-        public Card GetPutCard(IList<Card> 手札, IList<Card> 場札)
+        public ICard GetPutCard(IList<ICard> 手札, IList<ICard> 場札)
         {
             var 出す札 = 小島.戦略その1.出す札(手札, 場札, パス可能);
             if (出す札 == null)

@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Sevens.Interfaces;
 
 namespace WpfSevens
 {
@@ -37,7 +38,7 @@ namespace WpfSevens
         private Dictionary<IPlayer, BitmapImage> _PlayerBitmapImage = new Dictionary<IPlayer, BitmapImage>();
         private Dictionary<IPlayer, List<Image>> _PlayerPutImage = new Dictionary<IPlayer, List<Image>>();
         private Dictionary<IPlayer, Image> _PlayerImage = new Dictionary<IPlayer, Image>();
-        private Dictionary<Card, Image> _CardImage = new Dictionary<Card, Image>();
+        private Dictionary<ICard, Image> _CardImage = new Dictionary<ICard, Image>();
         private TimerDisplayModeEnum _TimerDisplayMode = TimerDisplayModeEnum.TableAndPlayerCards;
         private string _TimerMessage = "";
 

@@ -3,20 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Sevens.Interfaces;
 
 namespace WpfSevens
 {
-    public class Card
+    public class Card : ICard
     {
         public const int START_CARD_NUMBER = 1;
         public const int END_CARD_NUMBER = 13;
-        public enum CardTypeEnum
-        {
-            Spades = 0,
-            Hearts = 1,
-            Clubs = 2,
-            Diamonds = 3,
-        };
 
         public CardTypeEnum CardType
         {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using WpfSevens;
+using Sevens.Interfaces;
 
 namespace 小島
 {
@@ -54,7 +55,7 @@ namespace 小島
             return !_Table.IsGameEnd;
         }
 
-        void 出力(IPlayer player, Card card)
+        void 出力(IPlayer player, ICard card)
         {
             if (サイレントモード)
                 return;

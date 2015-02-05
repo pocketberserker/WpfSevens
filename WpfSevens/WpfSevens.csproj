@@ -50,7 +50,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="IPlayer.cs" />
     <Compile Include="PlayerKojima.cs" />
     <Compile Include="PlayerSuzuki.cs" />
     <Compile Include="PlayerIshino.cs" />
@@ -154,6 +153,12 @@
     <Resource Include="Assets\IG115.png" />
     <Resource Include="Assets\IG116.png" />
     <Resource Include="Assets\IG117.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sevens.Interfaces\Sevens.Interfaces.fsproj">
+      <Project>{e6848608-7292-4e4b-95b6-16c8417cf610}</Project>
+      <Name>Sevens.Interfaces</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

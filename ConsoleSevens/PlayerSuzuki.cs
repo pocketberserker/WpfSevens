@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Sevens.Interfaces;
 
 namespace WpfSevens
 {
@@ -20,7 +21,7 @@ namespace WpfSevens
             return "suzuki.png";
         }
 
-        public Card GetPutCard(IList<Card> playerCards, IList<Card> putCards)
+        public ICard GetPutCard(IList<ICard> playerCards, IList<ICard> putCards)
         {
             var cards = Table.GetPutPossibleCards(playerCards, putCards);
 

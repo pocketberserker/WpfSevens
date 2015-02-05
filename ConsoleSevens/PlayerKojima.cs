@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Sevens.Interfaces;
 
 #region 小島以外は見ないでね
 
@@ -57,7 +58,7 @@ namespace 小島
             public abstract string GetPalyerName();
             public abstract string GetPalyerImageName();
 
-            public Card GetPutCard(IList<Card> playerCards, IList<Card> putCards)
+            public ICard GetPutCard(IList<ICard> playerCards, IList<ICard> putCards)
             { return null; }
         }
 
@@ -189,13 +190,13 @@ namespace 小島
             自分のことは棚に上げてイカサマされたときに訴える();
         }
 
-        public Card GetPutCard(IList<Card> playerCards, IList<Card> putCards)
+        public ICard GetPutCard(IList<ICard> playerCards, IList<ICard> putCards)
         {
             GetPutCardが呼ばれた回数++;
             return Get_PutCard(playerCards, putCards);
         }
 
-        protected abstract Card Get_PutCard(IList<Card> playerCards, IList<Card> putCards);
+        protected abstract ICard Get_PutCard(IList<ICard> playerCards, IList<ICard> putCards);
 
         void 自分のことは棚に上げてイカサマされたときに訴える()
         {
@@ -253,7 +254,7 @@ namespace 小島
         {
             class 手
             {
-                public Card 札     { get; set; }
+                public ICard 札     { get; set; }
                 public int  評価点 { get; set; }
 
                 public bool 有効
@@ -262,16 +263,16 @@ namespace 小島
                 }
             }
 
-            readonly IList<Card> 手札    ;
-            readonly IList<Card> 出せる札;
+            readonly IList<ICard> 手札    ;
+            readonly IList<ICard> 出せる札;
 
-            public 俺の回(IList<Card> 手札, IList<Card> 場札)
+            public 俺の回(IList<ICard> 手札, IList<ICard> 場札)
             {
                 this.手札 = 手札;
                 出せる札  = Table.GetPutPossibleCards(手札, 場札);
             }
 
-            public Card 出す札(bool パス可能)
+            public ICard 出す札(bool パス可能)
             {
                 var 最善手 = this.最善手;
                 return 最善手 == null || (パス可能 && 最善手.評価点 != パスできてもしない評価点())
@@ -295,35 +296,35 @@ namespace 小島
                 }
             }
 
-            protected abstract int 評価(Card 札);
+            protected abstract int 評価(ICard 札);
             protected abstract int パスできてもしない評価点();
 
-            protected bool 持ってる(Card 札)
+            protected bool 持ってる(ICard 札)
             { return 手札.Any(手札の中の一枚 => 手札の中の一枚.同じ(札)); }
 
             protected bool 後一枚()
             { return 手札.Count == 1; }
         }
 
-        public static Card 次(this Card 札)
+        public static ICard 次(this ICard 札)
         {
             return (札 == null || 札.CardNumber == 1 || 札.CardNumber == 7 || 札.CardNumber == 13)
                     ? null
                     : new Card(札.CardType, 札.CardNumber < 7 ? 札.CardNumber - 1 : 札.CardNumber + 1);
         }
 
-        public static bool 同じ(this Card @this, Card card)
+        public static bool 同じ(this ICard @this, ICard card)
         { return @this != null && card != null && @this.CardType == card.CardType && @this.CardNumber == card.CardNumber; }
 
         [Conditional("Test")]
         public static void テスト()
         {
-            Debug.Assert(new Card(Card.CardTypeEnum.Clubs   ,  3)     .同じ(new Card(Card.CardTypeEnum.Clubs   ,  3)));
-            Debug.Assert(new Card(Card.CardTypeEnum.Diamonds,  6).次().同じ(new Card(Card.CardTypeEnum.Diamonds,  5)));
-            Debug.Assert(new Card(Card.CardTypeEnum.Spades  , 12).次().同じ(new Card(Card.CardTypeEnum.Spades  , 13)));
-            Debug.Assert(new Card(Card.CardTypeEnum.Spades  ,  7).次() == null);
-            Debug.Assert(new Card(Card.CardTypeEnum.Clubs   ,  1).次() == null);
-            Debug.Assert(new Card(Card.CardTypeEnum.Hearts  , 13).次() == null);
+            Debug.Assert(new Card(CardTypeEnum.Clubs   ,  3)     .同じ(new Card(CardTypeEnum.Clubs   ,  3)));
+            Debug.Assert(new Card(CardTypeEnum.Diamonds,  6).次().同じ(new Card(CardTypeEnum.Diamonds,  5)));
+            Debug.Assert(new Card(CardTypeEnum.Spades  , 12).次().同じ(new Card(CardTypeEnum.Spades  , 13)));
+            Debug.Assert(new Card(CardTypeEnum.Spades  ,  7).次() == null);
+            Debug.Assert(new Card(CardTypeEnum.Clubs   ,  1).次() == null);
+            Debug.Assert(new Card(CardTypeEnum.Hearts  , 13).次() == null);
         }
     }
 
@@ -338,10 +339,10 @@ namespace 小島
             const int 次を持ってない場合に持ってる続くやつ一枚あたり   =          1;
             const int 次を持ってない場合に持ってない続くやつ一枚あたり =         -1;
 
-            public 俺の回(IList<Card> 手札, IList<Card> 場札) : base(手札, 場札)
+            public 俺の回(IList<ICard> 手札, IList<ICard> 場札) : base(手札, 場札)
             {}
 
-            protected override int 評価(Card 札)
+            protected override int 評価(ICard 札)
             {
                 if (後一枚())
                     return 最後の札;
@@ -364,7 +365,7 @@ namespace 小島
             { return 最高評価点; }
         }
 
-        public static Card 出す札(IList<Card> 手札, IList<Card> 場札, bool パス可能)
+        public static ICard 出す札(IList<ICard> 手札, IList<ICard> 場札, bool パス可能)
         { return new 俺の回(手札, 場札).出す札(パス可能); }
     }
 
@@ -376,10 +377,10 @@ namespace 小島
             const int 札は最後の札                     = 150;
             const int 次以降の札を持ってる場合の基礎点 = 札は最後の札 - 基礎評価点;
 
-            public 俺の回(IList<Card> 手札, IList<Card> 場札) : base(手札, 場札)
+            public 俺の回(IList<ICard> 手札, IList<ICard> 場札) : base(手札, 場札)
             {}
 
-            protected override int 評価(Card 札)
+            protected override int 評価(ICard 札)
             {
                 return 後一枚()
                        ? 札は最後の札
@@ -389,14 +390,14 @@ namespace 小島
             protected override int パスできてもしない評価点()
             { return 次以降の札を持ってる場合の基礎点; }
 
-            int 次以降の手札の評価(Card 札)
+            int 次以降の手札の評価(ICard 札)
             {
                 return 次以降の札を持ってる場合の基礎点
                        - 基礎評価点 * 次まで何枚あいてるか(札)
                        + 次から何枚続けて持ってるか(札);
             }
 
-            int 次まで何枚あいてるか(Card 札)
+            int 次まで何枚あいてるか(ICard 札)
             {
                 var 次までにあいてる数 = 0;
                 for (var 次の札 = 札.次(); 次の札 != null; 次の札 = 次の札.次()) {
@@ -408,7 +409,7 @@ namespace 小島
                 return 7;
             }
 
-            int 次から何枚続けて持ってるか(Card 札)
+            int 次から何枚続けて持ってるか(ICard 札)
             {
                 var 次から続けて持ってる数 = 0;
                 for (var 次の札 = 札.次(); 持ってる(次の札); 次の札 = 次の札.次())
@@ -426,7 +427,7 @@ namespace 小島
                 return 次から持ってる数;
             }
 
-            static int 基礎評価(Card 札)
+            static int 基礎評価(ICard 札)
             {
                 var 評価点 = 基礎評価点 * 札.中央の7からの距離();
                 return 札.はAかK() ? 評価点 + 基礎評価点 : 評価点;
@@ -435,53 +436,53 @@ namespace 小島
             [Conditional("Test")]
             public static void テスト()
             {
-                var 手札 = new List<Card> {
-                    new Card(Card.CardTypeEnum.Spades  ,  2),
-                    new Card(Card.CardTypeEnum.Spades  ,  3),
-                    new Card(Card.CardTypeEnum.Spades  ,  4),
-                    new Card(Card.CardTypeEnum.Spades  ,  5),
-                    new Card(Card.CardTypeEnum.Clubs   ,  8),
-                    new Card(Card.CardTypeEnum.Clubs   , 10),
-                    new Card(Card.CardTypeEnum.Clubs   , 11),
-                    new Card(Card.CardTypeEnum.Diamonds,  9),
-                    new Card(Card.CardTypeEnum.Diamonds, 13)
+                var 手札 = new List<ICard> {
+                    new Card(CardTypeEnum.Spades  ,  2),
+                    new Card(CardTypeEnum.Spades  ,  3),
+                    new Card(CardTypeEnum.Spades  ,  4),
+                    new Card(CardTypeEnum.Spades  ,  5),
+                    new Card(CardTypeEnum.Clubs   ,  8),
+                    new Card(CardTypeEnum.Clubs   , 10),
+                    new Card(CardTypeEnum.Clubs   , 11),
+                    new Card(CardTypeEnum.Diamonds,  9),
+                    new Card(CardTypeEnum.Diamonds, 13)
                 };
-                var 場札 = new List<Card> {
-                    new Card(Card.CardTypeEnum.Spades  , 7),
-                    new Card(Card.CardTypeEnum.Hearts  , 7),
-                    new Card(Card.CardTypeEnum.Clubs   , 7),
-                    new Card(Card.CardTypeEnum.Diamonds, 7)
+                var 場札 = new List<ICard> {
+                    new Card(CardTypeEnum.Spades  , 7),
+                    new Card(CardTypeEnum.Hearts  , 7),
+                    new Card(CardTypeEnum.Clubs   , 7),
+                    new Card(CardTypeEnum.Diamonds, 7)
                 };
 
                 var 俺の回 = new 俺の回(手札, 場札);
 
-                Debug.Assert( 俺の回.持ってる(new Card(Card.CardTypeEnum.Clubs, 10)));
-                Debug.Assert(!俺の回.持ってる(new Card(Card.CardTypeEnum.Clubs,  9)));
-                Debug.Assert(俺の回.次から何枚続けて持ってるか(new Card(Card.CardTypeEnum.Spades  , 5)) == 3);
-                Debug.Assert(俺の回.次まで何枚あいてるか      (new Card(Card.CardTypeEnum.Spades  , 4)) == 0);
-                Debug.Assert(俺の回.次まで何枚あいてるか      (new Card(Card.CardTypeEnum.Clubs   , 8)) == 1);
-                Debug.Assert(俺の回.次まで何枚あいてるか      (new Card(Card.CardTypeEnum.Diamonds, 9)) == 3);
-                Debug.Assert(俺の回.次から何枚持ってるか      (new Card(Card.CardTypeEnum.Clubs   , 8)) == 2);
+                Debug.Assert( 俺の回.持ってる(new Card(CardTypeEnum.Clubs, 10)));
+                Debug.Assert(!俺の回.持ってる(new Card(CardTypeEnum.Clubs,  9)));
+                Debug.Assert(俺の回.次から何枚続けて持ってるか(new Card(CardTypeEnum.Spades  , 5)) == 3);
+                Debug.Assert(俺の回.次まで何枚あいてるか      (new Card(CardTypeEnum.Spades  , 4)) == 0);
+                Debug.Assert(俺の回.次まで何枚あいてるか      (new Card(CardTypeEnum.Clubs   , 8)) == 1);
+                Debug.Assert(俺の回.次まで何枚あいてるか      (new Card(CardTypeEnum.Diamonds, 9)) == 3);
+                Debug.Assert(俺の回.次から何枚持ってるか      (new Card(CardTypeEnum.Clubs   , 8)) == 2);
 
-                var 評価点 = 俺の回.評価(new Card(Card.CardTypeEnum.Spades  ,  2));
-                評価点     = 俺の回.評価(new Card(Card.CardTypeEnum.Spades  ,  3));
-                評価点     = 俺の回.評価(new Card(Card.CardTypeEnum.Spades  ,  4));
-                評価点     = 俺の回.評価(new Card(Card.CardTypeEnum.Spades  ,  5));
-                評価点     = 俺の回.評価(new Card(Card.CardTypeEnum.Clubs   ,  8));
-                評価点     = 俺の回.評価(new Card(Card.CardTypeEnum.Clubs   , 10));
-                評価点     = 俺の回.評価(new Card(Card.CardTypeEnum.Clubs   , 11));
-                評価点     = 俺の回.評価(new Card(Card.CardTypeEnum.Diamonds,  9));
-                評価点     = 俺の回.評価(new Card(Card.CardTypeEnum.Diamonds, 13));
+                var 評価点 = 俺の回.評価(new Card(CardTypeEnum.Spades  ,  2));
+                評価点     = 俺の回.評価(new Card(CardTypeEnum.Spades  ,  3));
+                評価点     = 俺の回.評価(new Card(CardTypeEnum.Spades  ,  4));
+                評価点     = 俺の回.評価(new Card(CardTypeEnum.Spades  ,  5));
+                評価点     = 俺の回.評価(new Card(CardTypeEnum.Clubs   ,  8));
+                評価点     = 俺の回.評価(new Card(CardTypeEnum.Clubs   , 10));
+                評価点     = 俺の回.評価(new Card(CardTypeEnum.Clubs   , 11));
+                評価点     = 俺の回.評価(new Card(CardTypeEnum.Diamonds,  9));
+                評価点     = 俺の回.評価(new Card(CardTypeEnum.Diamonds, 13));
             }
         }
 
-        public static Card 出す札(IList<Card> 手札, IList<Card> 場札, bool パス可能)
+        public static ICard 出す札(IList<ICard> 手札, IList<ICard> 場札, bool パス可能)
         { return new 俺の回(手札, 場札).出す札(パス可能); }
 
-        static bool はAかK(this Card 札)
+        static bool はAかK(this ICard 札)
         { return 札.CardNumber == 1 || 札.CardNumber == 13; }
 
-        static int 中央の7からの距離(this Card 札)
+        static int 中央の7からの距離(this ICard 札)
         { return Math.Abs(札.CardNumber - 7); }
 
         [Conditional("Test")]
@@ -519,7 +520,7 @@ namespace WpfSevens {
         public override string GetPalyerImageName()
         { return "kojima.png"; }
 
-        protected override Card Get_PutCard(IList<Card> 手札, IList<Card> 場札)
+        protected override ICard Get_PutCard(IList<ICard> 手札, IList<ICard> 場札)
         {
             var 出す札 = 小島.戦略その2.出す札(手札, 場札, パス可能);
             if (出す札 == null)

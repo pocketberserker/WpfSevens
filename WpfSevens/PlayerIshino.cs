@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Sevens.Interfaces;
 
 namespace WpfSevens
 {
@@ -32,7 +33,7 @@ namespace WpfSevens
             return "ishino.png";
         }
 
-        public Card GetPutCard(IList<Card> playerCards, IList<Card> putCards)
+        public ICard GetPutCard(IList<ICard> playerCards, IList<ICard> putCards)
         {
             var random = new Random();
             var cards = Table.GetPutPossibleCards(playerCards, putCards);
@@ -43,7 +44,7 @@ namespace WpfSevens
                 return cards.First();
             else
             {
-                Dictionary<Card, CardStatus> cardDictionary = new Dictionary<Card, CardStatus>();
+                Dictionary<ICard, CardStatus> cardDictionary = new Dictionary<ICard, CardStatus>();
 
                 foreach (var card in cards)
                 {
@@ -82,7 +83,7 @@ namespace WpfSevens
             return default(Card);
         }
 
-        private int SpaceCardCount(Card card)
+        private int SpaceCardCount(ICard card)
         {
             if (card.CardNumber > 7)
             {
@@ -95,7 +96,7 @@ namespace WpfSevens
 
         }
 
-        private int MyCardCount(Card card, IList<Card> playerCards)
+        private int MyCardCount(ICard card, IList<ICard> playerCards)
         {
             var cards = playerCards.Where(row => row.CardType == card.CardType);
 
@@ -111,7 +112,7 @@ namespace WpfSevens
             return cards.Count();
         }
 
-        private int IsLastCard(Card card, IList<Card> playerCards, IList<Card> putCards)
+        private int IsLastCard(ICard card, IList<ICard> playerCards, IList<ICard> putCards)
         {
             if (card.CardNumber == 1 || card.CardNumber == 13)
                 return 0;
@@ -133,7 +134,7 @@ namespace WpfSevens
                 return 0;
         }
 
-        private int IsNextCard(Card card, IList<Card> playerCards, IList<Card> putCards)
+        private int IsNextCard(ICard card, IList<ICard> playerCards, IList<ICard> putCards)
         {
             var cards = playerCards.Where(row => row.CardType == card.CardType);
 
