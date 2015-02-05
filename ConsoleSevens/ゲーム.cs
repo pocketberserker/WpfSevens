@@ -4,6 +4,7 @@ using System.Linq;
 using WpfSevens;
 using Sevens.Interfaces;
 using Sevens.Core;
+using Sevens.FSharp.Ai;
 
 namespace 小島
 {
@@ -41,6 +42,7 @@ namespace 小島
             _PlayerList.Add(new PlayerSuzuki());
             _PlayerList.Add(new PlayerKojima());
             _PlayerList.Add(new PlayerIshino());
+            _PlayerList.Add(new PlayerPocketberserker());
 
             _Table.GameStart(_PlayerList);
             _Table.CheckStartPlayer();

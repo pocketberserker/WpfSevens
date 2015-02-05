@@ -16,6 +16,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using Sevens.Interfaces;
 using Sevens.Core;
+using Sevens.FSharp.Ai;
 
 namespace WpfSevens
 {
@@ -95,6 +96,7 @@ namespace WpfSevens
             _PlayerList.Add(new PlayerSuzuki());
             _PlayerList.Add(new PlayerKojima());
             _PlayerList.Add(new PlayerIshino());
+            _PlayerList.Add(new PlayerPocketberserker());
 
             _Table.GameStart(_PlayerList);
 

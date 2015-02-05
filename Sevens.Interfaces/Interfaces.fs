@@ -8,6 +8,7 @@ type CardTypeEnum =
   | Clubs = 2
   | Diamonds = 3
 
+[<AllowNullLiteral>]
 type ICard =
   abstract member CardType: CardTypeEnum
   abstract member CardNumber: int

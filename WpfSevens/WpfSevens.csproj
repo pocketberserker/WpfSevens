@@ -96,6 +96,7 @@
   <ItemGroup>
     <Resource Include="Assets\Ishino.png" />
     <Resource Include="Assets\Kojima.png" />
+    <Resource Include="Assets\pocketberserker.png" />
     <Resource Include="Assets\Suzuki.png" />
   </ItemGroup>
   <ItemGroup>
@@ -157,13 +158,17 @@
       <Project>{6d04a1a4-b9e3-4e2b-82bf-a23b1db0feb4}</Project>
       <Name>Sevens.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Sevens.FSharp.Ai\Sevens.FSharp.Ai.fsproj">
+      <Project>{9c9b4701-cbaa-46fb-a500-1c11d6badfdc}</Project>
+      <Name>Sevens.FSharp.Ai</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sevens.Interfaces\Sevens.Interfaces.fsproj">
       <Project>{e6848608-7292-4e4b-95b6-16c8417cf610}</Project>
       <Name>Sevens.Interfaces</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

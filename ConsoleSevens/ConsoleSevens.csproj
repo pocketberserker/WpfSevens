@@ -54,6 +54,10 @@
       <Project>{6d04a1a4-b9e3-4e2b-82bf-a23b1db0feb4}</Project>
       <Name>Sevens.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Sevens.FSharp.Ai\Sevens.FSharp.Ai.fsproj">
+      <Project>{9c9b4701-cbaa-46fb-a500-1c11d6badfdc}</Project>
+      <Name>Sevens.FSharp.Ai</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Sevens.Interfaces\Sevens.Interfaces.fsproj">
       <Project>{e6848608-7292-4e4b-95b6-16c8417cf610}</Project>
       <Name>Sevens.Interfaces</Name>
